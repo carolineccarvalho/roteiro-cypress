@@ -68,4 +68,54 @@ describe('TODOMvc App', () => {
       .children()
       .should('have.length', 2);
   });
+
+  it('Verifica se tarefas completadas aparecem no filtro', () => {
+    cy.visit('');
+  
+    cy.get('[data-cy=todo-input]')
+      .type('Tarefa 1{enter}')
+      .type('Tarefa 2{enter}');
+  
+    cy.get('[data-cy=todos-list] > li [data-cy=toggle-todo-checkbox]')
+      .first()
+      .click();
+
+    cy.get('[data-cy=filter-completed-link]')
+      .click();
+  
+    cy.get('[data-cy=todos-list]')
+      .children()
+      .should('have.length', 1)
+      .first()
+      .should('have.text', 'Tarefa 1');
+  });
+  
+  it('Desaparecer tarefa ativa após ser completada', () => {
+    cy.visit('');
+  
+    cy.get('[data-cy=todo-input]')
+      .type('Tarefa de Teste{enter}');
+
+    cy.get('[data-cy=filter-active-link]')
+      .click();
+      
+    cy.get('[data-cy=todos-list] > li [data-cy=toggle-todo-checkbox]')
+      .click();
+  
+    cy.get('[data-cy=todos-list]')
+      .children()
+      .should('have.length', 0);
+  });
+  
+  it('Ver se o campo é limpo após inserir uma tarefa', () => {
+    cy.visit('');
+
+    cy.get('[data-cy=todo-input]')
+      .type('Tarefa para limpar o campo{enter}');
+  
+    cy.get('[data-cy=todo-input]')
+      .should('have.value', '');
+  });
+
+
 });
